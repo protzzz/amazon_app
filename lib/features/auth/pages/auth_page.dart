@@ -5,23 +5,25 @@ import 'package:flutter/material.dart';
 
 enum Auth { login, signup }
 
-class AuthScreen extends StatefulWidget {
+class AuthPage extends StatefulWidget {
   static const String routeName = '/auth-screen';
-  const AuthScreen({super.key});
+  const AuthPage({super.key});
 
   @override
-  State<AuthScreen> createState() => _AuthScreenState();
+  State<AuthPage> createState() => _AuthScreenState();
 }
 
-class _AuthScreenState extends State<AuthScreen> {
+class _AuthScreenState extends State<AuthPage> {
   Auth _auth = Auth.signup;
   final _signUpFormKey = GlobalKey<FormState>();
   final _signInFormKey = GlobalKey<FormState>();
 
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _emailController =
+      TextEditingController();
   final TextEditingController _passwordController =
       TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _nameController =
+      TextEditingController();
 
   @override
   void dispose() {
@@ -78,7 +80,9 @@ class _AuthScreenState extends State<AuthScreen> {
                     ListTile(
                       title: const Text(
                         'Create Account',
-                        style: TextStyle(fontWeight: FontWeight.w500),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                       leading: Radio<Auth>(
                         activeColor: GlobalVariables.secondaryColor,
@@ -150,7 +154,9 @@ class _AuthScreenState extends State<AuthScreen> {
                     ListTile(
                       title: Text(
                         'Sign-In',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       leading: Radio(
                         activeColor: GlobalVariables.secondaryColor,
