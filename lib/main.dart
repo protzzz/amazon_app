@@ -2,8 +2,10 @@ import 'package:amazon_clone_app/constants/global_variables.dart';
 import 'package:amazon_clone_app/features/auth/pages/auth_page.dart';
 import 'package:amazon_clone_app/router.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+Future<void> main() async {
+  await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
 
