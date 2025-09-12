@@ -1,7 +1,7 @@
-import 'package:amazon_clone_app/common/widgets/custom_button.dart';
-import 'package:amazon_clone_app/common/widgets/custom_textfield.dart';
-import 'package:amazon_clone_app/constants/global_variables.dart';
-import 'package:amazon_clone_app/features/auth/services/auth_service.dart';
+import 'package:amazon_clone_app/features/auth/widgets/custom_button.dart';
+import 'package:amazon_clone_app/features/auth/widgets/custom_textfield.dart';
+import 'package:amazon_clone_app/core/constants/global_variables.dart';
+import 'package:amazon_clone_app/features/auth/repository/auth_remote_repository.dart';
 import 'package:flutter/material.dart';
 
 enum Auth { login, signup }

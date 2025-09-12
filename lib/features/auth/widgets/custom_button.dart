@@ -1,4 +1,4 @@
-import 'package:amazon_clone_app/constants/global_variables.dart';
+import 'package:amazon_clone_app/core/constants/global_variables.dart';
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatelessWidget {
