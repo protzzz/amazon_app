@@ -7,10 +7,10 @@ import 'package:http/http.dart' as http;
 
 class AuthService {
   void signUpUser({
+    required BuildContext context,
     required String email,
     required String password,
     required String name,
-    required BuildContext context,
   }) async {
     try {
       User user = User(
