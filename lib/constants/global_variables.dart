@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 String uri =
-    "http://${Platform.isAndroid ? '10.0.2.2' : {dotenv.env['LOCALHOST_ADDR']}}:3000";
+    "http://${Platform.isAndroid ? '10.0.2.2' : dotenv.env['LOCALHOST_ADDR']}:3000";
 
 class GlobalVariables {
   // COLORS
