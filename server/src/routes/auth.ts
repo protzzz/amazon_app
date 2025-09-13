@@ -3,6 +3,7 @@ import { Router, Request, Response } from "express";
 import User from "../models/user";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { error } from "console";
 
 const authRouter = Router();
 
@@ -21,7 +22,9 @@ authRouter.post("/api/signup", async (req: Request, res: Response) => {
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-      return res.json({ message: "User with same email is already exists!" });
+      return res
+        .status(400)
+        .json({ error: "User with the same email already exists!" });
     }
 
     const hashedPassword = await bcryptjs.hash(password, 8);
@@ -37,7 +40,7 @@ authRouter.post("/api/signup", async (req: Request, res: Response) => {
     user = await user.save();
 
     // return that data to the user
-    res.json(user);
+    res.status(201).json(user);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     res.status(500).json({ error: message });
@@ -52,7 +55,7 @@ authRouter.post("/api/signin", async (req: Request, res: Response) => {
     if (!existingUser) {
       return res
         .status(400)
-        .json({ message: "User with this email addres does not exist!" });
+        .json({ error: "User with this email addres does not exist!" });
     }
 
     const isMatchPassword = await bcryptjs.compare(
@@ -60,7 +63,7 @@ authRouter.post("/api/signin", async (req: Request, res: Response) => {
       existingUser.password
     );
     if (!isMatchPassword) {
-      return res.status(400).json({ message: "Incorrect password!" });
+      return res.status(400).json({ error: "Incorrect password!" });
     }
 
     const token = jwt.sign({ id: existingUser._id }, "passwordKey");
