@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:amazon_clone_app/core/constants/api_excesption.dart';
 import 'package:amazon_clone_app/core/constants/global_variables.dart';
 import 'package:amazon_clone_app/core/services/shared_preferences_service.dart';
 import 'package:amazon_clone_app/models/user_model.dart';
@@ -41,20 +42,29 @@ class AuthRemoteRepository {
       final res = await http.post(
         Uri.parse('$uri/api/signin'),
         body: jsonEncode({'email': email, 'password': password}),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-        },
+        headers: {'Content-Type': 'application/json'},
       );
 
-      if (res.statusCode != 200) {
-        throw jsonDecode(res.body)['error'];
-      }
+      // if (res.statusCode != 200) {
+      //   throw jsonDecode(res.body)['error'];
+      // }
 
       print(res.body);
 
-      return UserModel.fromJson(res.body);
+      if (res.statusCode == 200) {
+        return UserModel.fromJson(res.body);
+      } else {
+        final decoded = jsonDecode(res.body);
+        final errorMessage =
+            decoded['error'] ??
+            decoded['message'] ??
+            'Unknown error';
+
+        throw ApiException(errorMessage, res.statusCode);
+      }
     } catch (e) {
-      throw e.toString();
+      if (e is ApiException) rethrow;
+      throw ApiException(e.toString(), -1);
     }
   }
 
