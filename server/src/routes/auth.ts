@@ -24,7 +24,7 @@ authRouter.post("/api/signup", async (req: Request, res: Response) => {
     if (existingUser) {
       return res
         .status(400)
-        .json({ error: "User with the same email already exists!" });
+        .json({ message: "User with the same email already exists!" });
     }
 
     const hashedPassword = await bcryptjs.hash(password, 8);
@@ -52,10 +52,11 @@ authRouter.post("/api/signin", async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
     const existingUser = await User.findOne({ email });
+
     if (!existingUser) {
       return res
         .status(400)
-        .json({ error: "User with this email addres does not exist!" });
+        .json({ message: "User with this email addres does not exist!" });
     }
 
     const isMatchPassword = await bcryptjs.compare(
