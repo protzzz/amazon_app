@@ -15,7 +15,7 @@ class AuthRemoteRepository {
   }) async {
     try {
       final res = await http.post(
-        Uri.parse('$uri/api/signup'),
+        Uri.parse('$uri/signup'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'name': name,
@@ -40,7 +40,7 @@ class AuthRemoteRepository {
   }) async {
     try {
       final res = await http.post(
-        Uri.parse('$uri/api/signin'),
+        Uri.parse('$uri/login'),
         body: jsonEncode({'email': email, 'password': password}),
         headers: {'Content-Type': 'application/json'},
       );
