@@ -5,4 +5,9 @@ class SharedPreferencesService {
     final preferences = await SharedPreferences.getInstance();
     preferences.setString('x-auth-token', token);
   }
+
+  Future<String?> getToken() async {
+    final preferences = await SharedPreferences.getInstance();
+    return preferences.getString('x-auth-token');
+  }
 }
