@@ -21,7 +21,10 @@ void main() async {
     throw Exception('Error loading .env file: $e');
   }
   runApp(
-    BlocProvider(create: (_) => AuthCubit(), child: const MyApp()),
+    MultiBlocProvider(
+      providers: [BlocProvider(create: (_) => AuthCubit())],
+      child: const MyApp(),
+    ),
   );
   // runApp(const MyApp());
 }
@@ -34,12 +37,10 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final AuthRemoteRepository authRemoteRepository =
-      AuthRemoteRepository();
-
   @override
   void initState() {
     super.initState();
+    context.read<AuthCubit>().getUserData();
   }
 
   @override
