@@ -15,7 +15,7 @@ class AuthRemoteRepository {
   }) async {
     try {
       final res = await http.post(
-        Uri.parse('$uri/signup'),
+        Uri.parse('$uri/auth/signup'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'name': name,
@@ -30,7 +30,8 @@ class AuthRemoteRepository {
 
       return UserModel.fromJson(res.body);
     } catch (e) {
-      throw e.toString();
+      if (e is ApiException) rethrow;
+      throw ApiException(e.toString(), -1);
     }
   }
 
@@ -40,7 +41,7 @@ class AuthRemoteRepository {
   }) async {
     try {
       final res = await http.post(
-        Uri.parse('$uri/login'),
+        Uri.parse('$uri/auth/login'),
         body: jsonEncode({'email': email, 'password': password}),
         headers: {'Content-Type': 'application/json'},
       );
@@ -76,7 +77,7 @@ class AuthRemoteRepository {
       if (token == null) return null;
 
       final res = await http.post(
-        Uri.parse('$uri/tokenIsValid'),
+        Uri.parse('$uri/auth/tokenIsValid'),
         headers: <String, String>{
           'Content-Type': 'application/json',
           'x-auth-token': token,
@@ -86,6 +87,26 @@ class AuthRemoteRepository {
 
       if (res.statusCode != 200 || jsonDecode(res.body) == false) {
         return null;
+      }
+
+      final userResponse = await http.get(
+        Uri.parse('$uri/auth'),
+        headers: <String, String>{
+          'Content_Type': 'application/json',
+          'x-auth-token': token,
+        },
+      );
+
+      if (userResponse.statusCode == 200) {
+        return UserModel.fromJson(userResponse.body);
+      } else {
+        final decoded = jsonDecode(res.body);
+        final errorMessage =
+            decoded['error'] ??
+            decoded['message'] ??
+            'Unknown error';
+
+        throw ApiException(errorMessage, res.statusCode);
       }
     } catch (e) {
       if (e is ApiException) rethrow;
