@@ -1,6 +1,7 @@
 import 'package:amazon_clone_app/core/constants/global_variables.dart';
 import 'package:amazon_clone_app/features/auth/cubit/auth_cubit.dart';
 import 'package:amazon_clone_app/features/auth/pages/auth_page.dart';
+import 'package:amazon_clone_app/features/auth/repository/auth_remote_repository.dart';
 import 'package:amazon_clone_app/features/home/pages/home_page.dart';
 import 'package:amazon_clone_app/router.dart';
 import 'package:flutter/material.dart';
@@ -25,8 +26,21 @@ void main() async {
   // runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final AuthRemoteRepository authRemoteRepository =
+      AuthRemoteRepository();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
