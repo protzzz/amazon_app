@@ -52,4 +52,20 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthError(error.toString()));
     }
   }
+
+  void getUserData() async {
+    try {
+      emit(AuthLoading());
+
+      final user = await authRemoteRepository.getUserData();
+
+      if (user != null) {
+        emit(AuthLoggedIn(user));
+      } else {
+        emit(AuthInitial());
+      }
+    } catch (error) {
+      emit(AuthError(error.toString()));
+    }
+  }
 }
