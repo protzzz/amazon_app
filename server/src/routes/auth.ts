@@ -42,8 +42,7 @@ authRouter.post("/api/signup", async (req: Request, res: Response) => {
     // return that data to the user
     res.status(201).json(user);
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    res.status(500).json({ error: message });
+    res.status(500).json({ error: error });
   }
 });
 
@@ -71,8 +70,26 @@ authRouter.post("/api/signin", async (req: Request, res: Response) => {
 
     res.json({ token, ...existingUser });
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    res.status(500).json({ error: message });
+    res.status(500).json({ error: error });
+  }
+});
+
+authRouter.post("/tokenIsValid", async (req: Request, res: Response) => {
+  try {
+    const token = req.header("x-auth-token");
+    if (!token) return res.json(false);
+
+    const isVerified = jwt.verify(token, "passwordKey");
+    if (!isVerified) return res.json(false);
+
+    const verifiedToken = isVerified as { id: string };
+
+    const user = await User.findById(verifiedToken.id);
+    if (!user) return res.json(false);
+
+    res.json(true);
+  } catch (error) {
+    res.status(500).json({ error: error });
   }
 });
 
