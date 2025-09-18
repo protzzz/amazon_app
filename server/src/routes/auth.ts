@@ -4,6 +4,7 @@ import User from "../models/user";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { error } from "console";
+import { auth, AuthRequest } from "../middleware/auth";
 
 const authRouter = Router();
 
@@ -94,7 +95,7 @@ authRouter.post(
 authRouter.post("/tokenIsValid", async (req: Request, res: Response) => {
   try {
     const token = req.header("x-auth-token");
-    if (!token) return res.json(false);
+    if (!token) return res.json({ message: "Token was't found." });
 
     const isVerified = jwt.verify(token, "passwordKey");
     if (!isVerified) return res.json(false);
@@ -104,7 +105,18 @@ authRouter.post("/tokenIsValid", async (req: Request, res: Response) => {
     const user = await User.findById(verifiedToken.id);
     if (!user) return res.json(false);
 
-    res.json(true);
+    res.json({ message: "User's token is valid.", token, user });
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+});
+
+authRouter.get("/", auth, async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.user) return res.status(401).json({ message: "User not found!" });
+
+    const user = await User.findById(req.user);
+    res.json({ ...user, token: req.token });
   } catch (error) {
     res.status(500).json({ error: error });
   }
