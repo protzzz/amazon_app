@@ -68,75 +68,28 @@ class AuthRemoteRepository {
     }
   }
 
-  /*
-  void signUpUser({
-    required BuildContext context,
-    required String email,
-    required String password,
-    required String name,
-  }) async {
+  Future<UserModel?> getUserData() async {
     try {
-      UserModel user = UserModel(
-        id: 'id',
-        name: name,
-        email: email,
-        password: password,
-        address: 'address',
-        type: 'type',
-        token: 'token',
-      );
+      final token = await spServie.getToken();
+
+      // if no token (user not logged in) -> null
+      if (token == null) return null;
 
       final res = await http.post(
-        Uri.parse('$uri/api/signup'),
-        body: user.toJson(),
+        Uri.parse('$uri/tokenIsValid'),
         headers: <String, String>{
           'Content-Type': 'application/json',
+          'x-auth-token': token,
         },
       );
+      print(res.body);
 
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () {
-          showSnackbar(
-            context,
-            'Account created! Now login, please.',
-          );
-        },
-      );
+      if (res.statusCode != 200 || jsonDecode(res.body) == false) {
+        return null;
+      }
     } catch (e) {
-      showSnackbar(context, e.toString());
+      if (e is ApiException) rethrow;
+      throw ApiException(e.toString(), -1);
     }
   }
-  */
-
-  /*
-  void signInUser({
-    required BuildContext context,
-    required String email,
-    required String password,
-  }) async {
-    try {
-      final res = await http.post(
-        Uri.parse('$uri/api/signin'),
-        body: jsonEncode({'email': email, 'password': password}),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-        },
-      );
-
-      // print(res.body);
-
-      httpErrorHandle(
-        response: res,
-        context: context,
-        onSuccess: () async {
-          await spServie.setToken(jsonDecode(res.body)['token']);
-        },
-      );
-    } catch (e) {
-      showSnackbar(context, e.toString());
-    }
-  }
-  */
 }
